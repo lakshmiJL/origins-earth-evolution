@@ -1,0 +1,81 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Playfair+Display:wght@600;700;800&display=swap');
+
+:root {
+  --ink: #101714;
+  --forest: #182c25;
+  --forest-soft: #20382f;
+  --paper: #f1eee2;
+  --muted: #b5c2b9;
+  --moss: #a8bd8c;
+  --amber: #d9ae70;
+  --hairline: rgba(236, 239, 218, 0.16);
+  --background: var(--ink);
+  --foreground: var(--paper);
+  --surface: var(--forest);
+  --border: var(--hairline);
+  --accent: var(--moss);
+  --highlight: var(--amber);
+  font-family: 'Manrope', sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color: var(--foreground);
+  background:
+    radial-gradient(ellipse at 18% 0, rgba(118, 133, 91, 0.16), transparent 38%),
+    linear-gradient(180deg, #111714 0%, #151a17 48%, #101511 100%);
+  color-scheme: dark;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: transparent;
+}
+
+body,
+button,
+input {
+  font-family: 'Manrope', sans-serif;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button,
+input {
+  outline: none;
+}
+
+button:hover,
+.main-nav a:hover,
+.sound-toggle:hover,
+.choice:hover,
+.cta-row button:hover {
+  transform: translateY(-2px);
+}
+
+#root {
+  min-height: 100vh;
+}
+
+a {
+  color: inherit;
+}
+
+h1,
+h2,
+h3 {
+  font-family: 'Playfair Display', serif;
+}
