@@ -144,24 +144,25 @@
     ctx.fill()
   }
 
-  const drawHadean = (ctx, width, height, time) => {
+  const drawHadean = (ctx, width, height, time, progress) => {
     fillAtmosphere(ctx, width, height, '#090d1a', '#271b25', '#101016')
     drawStars(ctx, width, height, time, 0.76)
 
     const glow = ctx.createRadialGradient(width * 0.66, height * 0.55, 2, width * 0.66, height * 0.55, height * 0.56)
-    glow.addColorStop(0, 'rgba(255, 160, 73, 0.76)')
-    glow.addColorStop(0.2, 'rgba(212, 74, 42, 0.35)')
+    const corePulse = (reducedMotion ? 0.76 : 0.68 + (Math.sin(time * 1.8) + 1) * 0.055) * (1 - progress * 0.42)
+    glow.addColorStop(0, `rgba(255, 160, 73, ${corePulse})`)
+    glow.addColorStop(0.2, `rgba(212, 74, 42, ${corePulse * 0.46})`)
     glow.addColorStop(1, 'rgba(67, 23, 27, 0)')
     ctx.fillStyle = glow
     ctx.fillRect(0, 0, width, height)
 
     const planetX = width * 0.67
     const planetY = height * 0.57
-    const planetRadius = Math.min(width, height) * 0.29
+    const planetRadius = Math.min(width, height) * (0.29 - progress * 0.012)
     const planetGradient = ctx.createRadialGradient(planetX - planetRadius * 0.48, planetY - planetRadius * 0.54, planetRadius * 0.06, planetX, planetY, planetRadius * 1.28)
-    planetGradient.addColorStop(0, '#f5aa61')
-    planetGradient.addColorStop(0.28, '#b84e37')
-    planetGradient.addColorStop(0.76, '#512830')
+    planetGradient.addColorStop(0, progress > 0.72 ? '#c79676' : '#f5aa61')
+    planetGradient.addColorStop(0.28, progress > 0.72 ? '#825447' : '#b84e37')
+    planetGradient.addColorStop(0.76, progress > 0.72 ? '#343039' : '#512830')
     planetGradient.addColorStop(1, '#170f19')
     ctx.fillStyle = planetGradient
     ctx.beginPath()
@@ -182,6 +183,18 @@
       ctx.fill()
     }
 
+    const impactPhase = reducedMotion ? 0.42 : (time * 0.2 + progress * 0.72) % 1
+    const impactX = planetX - planetRadius * 0.28
+    const impactY = planetY - planetRadius * 0.2
+    ctx.beginPath()
+    ctx.arc(impactX, impactY, planetRadius * (0.04 + impactPhase * 0.34), 0, Math.PI * 2)
+    ctx.strokeStyle = `rgba(255, 215, 145, ${(1 - impactPhase) * 0.68})`
+    ctx.lineWidth = Math.max(1, planetRadius * 0.018 * (1 - impactPhase * 0.5))
+    ctx.shadowColor = '#ffb467'
+    ctx.shadowBlur = 16
+    ctx.stroke()
+    ctx.shadowBlur = 0
+
     const fissureShift = reducedMotion ? 0 : Math.sin(time * 0.55) * 5
     for (let fissureIndex = 0; fissureIndex < 7; fissureIndex += 1) {
       const startX = planetX - planetRadius + fissureIndex * planetRadius * 0.32
@@ -189,7 +202,8 @@
       ctx.beginPath()
       ctx.moveTo(startX, startY)
       ctx.bezierCurveTo(startX + 18, startY + 28, startX - 12 + fissureShift, startY + 58, startX + 21, startY + planetRadius)
-      ctx.strokeStyle = fissureIndex % 2 ? 'rgba(255, 119, 52, 0.82)' : 'rgba(255, 191, 102, 0.82)'
+      const fissureAlpha = 0.82 - progress * 0.48
+      ctx.strokeStyle = fissureIndex % 2 ? `rgba(255, 119, 52, ${fissureAlpha})` : `rgba(255, 191, 102, ${fissureAlpha})`
       ctx.lineWidth = 1.2 + (fissureIndex % 3) * 0.6
       ctx.shadowColor = '#f56338'
       ctx.shadowBlur = 12
@@ -219,7 +233,8 @@
       ctx.beginPath()
       ctx.moveTo(originX, height * 0.76)
       ctx.bezierCurveTo(originX - 28, height * 0.84, originX + 45, height * 0.89, originX + 6, height)
-      ctx.strokeStyle = riverIndex % 2 ? 'rgba(255, 106, 46, 0.78)' : 'rgba(255, 191, 94, 0.72)'
+      const riverAlpha = 0.78 - progress * 0.5
+      ctx.strokeStyle = riverIndex % 2 ? `rgba(255, 106, 46, ${riverAlpha})` : `rgba(255, 191, 94, ${riverAlpha})`
       ctx.lineWidth = 2 + riverIndex % 3
       ctx.shadowColor = '#ff5f32'
       ctx.shadowBlur = 13
@@ -228,7 +243,7 @@
     ctx.restore()
 
     if (!reducedMotion) {
-      const meteorProgress = (time * 0.12) % 1
+      const meteorProgress = (time * 0.12 + progress * 0.55) % 1
       ctx.save()
       ctx.globalAlpha = 0.7 * (1 - meteorProgress)
       ctx.strokeStyle = '#ffd39a'
@@ -241,6 +256,21 @@
       ctx.stroke()
       ctx.restore()
     }
+
+    for (let ember = 0; ember < 22; ember += 1) {
+      const drift = reducedMotion ? 0 : Math.sin(time * 0.8 + ember * 1.7) * width * 0.018
+      const phase = reducedMotion ? 0.48 : (time * 0.07 + ember * 0.047) % 1
+      const emberX = width * (0.08 + ((ember * 53) % 83) / 100) + drift
+      const emberY = height * (0.9 - phase * 0.43)
+      ctx.beginPath()
+      ctx.arc(emberX, emberY, 1 + (ember % 3) * 0.65, 0, Math.PI * 2)
+      const emberOpacity = Math.sin(phase * Math.PI) * 0.72 * (1 - progress * 0.65)
+      ctx.fillStyle = `rgba(255, ${126 + (ember % 4) * 22}, 75, ${emberOpacity})`
+      ctx.shadowColor = '#ff6d38'
+      ctx.shadowBlur = 8
+      ctx.fill()
+    }
+    ctx.shadowBlur = 0
   }
 
   const drawKelp = (ctx, x, floor, length, sway, time, color) => {
@@ -332,19 +362,74 @@
     ctx.restore()
   }
 
-  const drawPaleozoic = (ctx, width, height, time) => {
+  const drawTrilobite = (ctx, centerX, centerY, size, time, phase) => {
+    const drift = reducedMotion ? 0 : Math.sin(time * 0.42 + phase) * size * 0.25
+    const bob = reducedMotion ? 0 : Math.sin(time * 1.1 + phase) * size * 0.035
+    ctx.save()
+    ctx.translate(centerX + drift, centerY + bob)
+    ctx.fillStyle = 'rgba(10, 30, 37, 0.38)'
+    ctx.beginPath()
+    ctx.ellipse(0, size * 0.08, size * 0.61, size * 0.26, 0, 0, Math.PI * 2)
+    ctx.fill()
+
+    const shell = ctx.createLinearGradient(0, -size * 0.28, 0, size * 0.28)
+    shell.addColorStop(0, '#b4a274')
+    shell.addColorStop(0.48, '#796d50')
+    shell.addColorStop(1, '#4e5144')
+    ctx.fillStyle = shell
+    ctx.beginPath()
+    ctx.ellipse(0, 0, size * 0.55, size * 0.27, 0, 0, Math.PI * 2)
+    ctx.fill()
+
+    ctx.fillStyle = '#d0bb83'
+    ctx.beginPath()
+    ctx.ellipse(-size * 0.34, 0, size * 0.19, size * 0.22, 0, 0, Math.PI * 2)
+    ctx.fill()
+    ctx.fillStyle = '#71684f'
+    ctx.beginPath()
+    ctx.ellipse(size * 0.08, 0, size * 0.16, size * 0.17, 0, 0, Math.PI * 2)
+    ctx.fill()
+
+    for (let segment = 0; segment < 5; segment += 1) {
+      const segmentX = size * (0.19 + segment * 0.065)
+      ctx.beginPath()
+      ctx.ellipse(segmentX, 0, size * 0.047, size * (0.2 - segment * 0.018), 0, 0, Math.PI * 2)
+      ctx.strokeStyle = 'rgba(34, 45, 43, 0.62)'
+      ctx.lineWidth = Math.max(0.8, size * 0.018)
+      ctx.stroke()
+    }
+
+    ctx.strokeStyle = 'rgba(203, 188, 144, 0.72)'
+    ctx.lineWidth = Math.max(0.75, size * 0.018)
+    for (let limb = 0; limb < 4; limb += 1) {
+      const limbX = -size * 0.18 + limb * size * 0.16
+      const flutter = reducedMotion ? 0 : Math.sin(time * 3 + phase + limb) * size * 0.025
+      ctx.beginPath()
+      ctx.moveTo(limbX, size * 0.12)
+      ctx.lineTo(limbX - size * 0.035, size * 0.28 + flutter)
+      ctx.moveTo(limbX, -size * 0.12)
+      ctx.lineTo(limbX - size * 0.035, -size * 0.28 - flutter)
+      ctx.stroke()
+    }
+    ctx.restore()
+  }
+
+  const drawPaleozoic = (ctx, width, height, time, progress) => {
     fillAtmosphere(ctx, width, height, '#062533', '#0a4a5a', '#101b27')
-    const caustic = ctx.createRadialGradient(width * 0.62, 0, 3, width * 0.62, height * 0.2, height * 0.85)
+    const causticDrift = (reducedMotion ? 0 : Math.sin(time * 0.24) * width * 0.09) + (progress - 0.5) * width * 0.12
+    const causticX = width * 0.62 + causticDrift
+    const caustic = ctx.createRadialGradient(causticX, 0, 3, causticX, height * 0.2, height * 0.85)
     caustic.addColorStop(0, 'rgba(113, 230, 211, 0.3)')
     caustic.addColorStop(1, 'rgba(66, 190, 203, 0)')
     ctx.fillStyle = caustic
     ctx.fillRect(0, 0, width, height)
 
     ctx.save()
-    ctx.globalAlpha = 0.12
+    ctx.globalAlpha = reducedMotion ? 0.1 : 0.09 + (Math.sin(time * 0.65) + 1) * 0.035
     ctx.fillStyle = '#a3fff0'
     for (let ray = 0; ray < 5; ray += 1) {
-      const rayX = width * (0.12 + ray * 0.2)
+      const raySway = reducedMotion ? 0 : Math.sin(time * 0.22 + ray) * width * 0.018
+      const rayX = width * (0.12 + ray * 0.2) + raySway
       ctx.beginPath()
       ctx.moveTo(rayX, 0)
       ctx.lineTo(rayX + width * 0.06, 0)
@@ -355,12 +440,13 @@
     }
     ctx.restore()
 
-    const seabed = ctx.createLinearGradient(0, height * 0.76, 0, height)
+    const seabedTop = height * (0.76 - progress * 0.13)
+    const seabed = ctx.createLinearGradient(0, seabedTop, 0, height)
     seabed.addColorStop(0, 'rgba(42, 93, 83, 0)')
     seabed.addColorStop(0.22, '#193b3b')
     seabed.addColorStop(1, '#101822')
     ctx.fillStyle = seabed
-    ctx.fillRect(0, height * 0.76, width, height * 0.24)
+    ctx.fillRect(0, seabedTop, width, height - seabedTop)
 
     for (let rock = 0; rock < 7; rock += 1) {
       const rockX = width * (rock * 0.17 - 0.04)
@@ -371,13 +457,42 @@
       ctx.fill()
     }
 
-    for (let plant = 0; plant < 9; plant += 1) {
+    const kelpCount = 9 - Math.round(progress * 4)
+    for (let plant = 0; plant < kelpCount; plant += 1) {
       const plantX = width * (0.04 + plant * 0.12)
       const plantLength = height * (0.2 + (plant % 4) * 0.055)
-      drawKelp(ctx, plantX, height * 0.91, plantLength, plant * 0.7, time, plant % 2 ? '#518775' : '#74a16f')
+      drawKelp(ctx, plantX, height * (0.91 - progress * 0.1), plantLength, plant * 0.7 + progress * 2, time, plant % 2 ? '#518775' : '#74a16f')
     }
 
-    drawAnomalocaris(ctx, width * (0.57 + (reducedMotion ? 0 : Math.sin(time * 0.35) * 0.045)), height * 0.53, Math.min(width, height) * 0.34, time)
+    const oceanScale = Math.min(width, height)
+    drawTrilobite(ctx, width * (0.18 + progress * 0.17), height * 0.57, oceanScale * 0.12, time, 0.7 + progress * 3)
+    drawTrilobite(ctx, width * (0.82 - progress * 0.14), height * 0.39, oceanScale * 0.095, time, 2.1 + progress * 2)
+    drawAnomalocaris(ctx, width * (0.32 + progress * 0.38 + (reducedMotion ? 0 : Math.sin(time * 0.35) * 0.025)), height * (0.53 - progress * 0.07), oceanScale * 0.34, time + progress * 3)
+
+    if (progress > 0.42) {
+      const shoreline = smoothstep(clamp((progress - 0.42) / 0.58, 0, 1))
+      const shoreX = width * (0.84 - shoreline * 0.2)
+      ctx.save()
+      ctx.globalAlpha = shoreline * 0.94
+      const land = ctx.createLinearGradient(shoreX, height * 0.55, width, height)
+      land.addColorStop(0, '#6b8050')
+      land.addColorStop(0.35, '#405c40')
+      land.addColorStop(1, '#1a302d')
+      ctx.fillStyle = land
+      ctx.beginPath()
+      ctx.moveTo(shoreX, height * (0.77 - shoreline * 0.1))
+      ctx.bezierCurveTo(width * 0.9, height * 0.67, width * 0.94, height * 0.73, width, height * 0.64)
+      ctx.lineTo(width, height)
+      ctx.lineTo(shoreX, height)
+      ctx.closePath()
+      ctx.fill()
+      for (let plant = 0; plant < Math.round(shoreline * 5); plant += 1) {
+        const plantX = width * (0.84 + plant * 0.033)
+        const plantHeight = height * (0.12 + (plant % 3) * 0.04)
+        drawTree(ctx, plantX, height * (0.79 - shoreline * 0.08), plantHeight, plant % 2 ? '#294736' : '#426b4c', Math.sin(plant + progress) * 3)
+      }
+      ctx.restore()
+    }
 
     for (let bubble = 0; bubble < 24; bubble += 1) {
       const rise = reducedMotion ? 0 : (time * (9 + bubble % 7) + bubble * 37) % (height * 0.86)
@@ -465,12 +580,13 @@
     ctx.restore()
   }
 
-  const drawMesozoic = (ctx, width, height, time) => {
+  const drawMesozoic = (ctx, width, height, time, progress) => {
     fillAtmosphere(ctx, width, height, '#101b27', '#31443a', '#182017')
     const sunX = width * 0.69
     const sunY = height * 0.34
     const sunGlow = ctx.createRadialGradient(sunX, sunY, 1, sunX, sunY, height * 0.45)
-    sunGlow.addColorStop(0, 'rgba(236, 189, 120, 0.4)')
+    const sunPulse = reducedMotion ? 0.4 : 0.34 + (Math.sin(time * 0.8) + 1) * 0.03
+    sunGlow.addColorStop(0, `rgba(236, 189, 120, ${sunPulse})`)
     sunGlow.addColorStop(0.28, 'rgba(186, 146, 90, 0.12)')
     sunGlow.addColorStop(1, 'rgba(68, 83, 65, 0)')
     ctx.fillStyle = sunGlow
@@ -489,15 +605,37 @@
     for (let tree = 0; tree < 15; tree += 1) {
       const treeX = width * (tree / 14)
       const scale = height * (0.17 + (tree % 5) * 0.035)
-      drawTree(ctx, treeX, height * (0.78 + (tree % 3) * 0.025), scale, tree % 2 ? '#243c2b' : '#304a30', Math.sin(tree) * 4)
+      const canopySway = reducedMotion ? 0 : Math.sin(time * 0.48 + tree * 0.72) * 6
+      drawTree(ctx, treeX, height * (0.78 + (tree % 3) * 0.025), scale, tree % 2 ? '#243c2b' : '#304a30', Math.sin(tree) * 4 + canopySway)
     }
 
-    drawSauropod(ctx, width * (0.61 + (reducedMotion ? 0 : Math.sin(time * 0.26) * 0.025)), height * 0.76, Math.min(width, height) * 0.48, time)
+    const sauropodX = width * (0.61 + (reducedMotion ? 0 : Math.sin(time * 0.26) * 0.025))
+    const sauropodGround = height * 0.76
+    const sauropodSize = Math.min(width, height) * 0.48
+    drawSauropod(ctx, sauropodX + progress * width * 0.07, sauropodGround, sauropodSize, time + progress * 7)
+
+    if (!reducedMotion) {
+      const stepBeat = (time * 1.02 + progress * 3) % 1
+      const dustOpacity = Math.max(0, 1 - stepBeat * 5) * 0.2
+      ctx.save()
+      ctx.globalAlpha = dustOpacity
+      ctx.fillStyle = '#c8a87b'
+      for (let dust = 0; dust < 5; dust += 1) {
+        const puff = (stepBeat + dust * 0.16) % 1
+        const footX = sauropodX - sauropodSize * 0.23 + (dust % 2) * sauropodSize * 0.36
+        const spread = puff * sauropodSize * 0.12
+        ctx.beginPath()
+        ctx.ellipse(footX + spread, sauropodGround + sauropodSize * 0.39 - puff * 4, 2 + puff * 5, 1.5 + puff * 3, 0, 0, Math.PI * 2)
+        ctx.fill()
+      }
+      ctx.restore()
+    }
 
     for (let flyer = 0; flyer < 4; flyer += 1) {
-      const drift = reducedMotion ? 0 : Math.sin(time * 0.32 + flyer) * width * 0.018
-      const flap = reducedMotion ? 1 : Math.sin(time * 3.6 + flyer) * 5
-      drawPterosaur(ctx, width * (0.2 + flyer * 0.18) + drift, height * (0.27 + (flyer % 2) * 0.1), 0.65 + (flyer % 2) * 0.3, flap)
+      const drift = (reducedMotion ? 0 : Math.sin(time * 0.32 + flyer) * width * 0.018) + progress * width * 0.035
+      const altitude = reducedMotion ? 0 : Math.sin(time * 0.7 + flyer * 1.5) * height * 0.018
+      const flap = reducedMotion ? 1 : Math.sin(time * 3.6 + flyer + progress * 5) * 5
+      drawPterosaur(ctx, width * (0.2 + flyer * 0.18) + drift, height * (0.27 + (flyer % 2) * 0.1) + altitude, 0.65 + (flyer % 2) * 0.3, flap)
     }
 
     ctx.fillStyle = 'rgba(216, 196, 151, 0.1)'
@@ -507,9 +645,35 @@
       ctx.arc(((mote * 73) % 997) / 997 * width, height - rise, 1.2 + mote % 3, 0, Math.PI * 2)
       ctx.fill()
     }
+
+    const extinction = smoothstep(clamp((progress - 0.78) / 0.22, 0, 1))
+    if (extinction > 0) {
+      ctx.fillStyle = `rgba(10, 13, 20, ${extinction * 0.62})`
+      ctx.fillRect(0, 0, width, height)
+      if (!reducedMotion) {
+        const impactProgress = clamp((progress - 0.84) / 0.16, 0, 1)
+        const impactX = width * (0.84 - impactProgress * 0.2)
+        const impactY = height * (0.12 + impactProgress * 0.18)
+        ctx.save()
+        ctx.globalAlpha = extinction
+        ctx.strokeStyle = 'rgba(255, 199, 135, 0.78)'
+        ctx.lineWidth = 2
+        ctx.shadowColor = '#ff9e62'
+        ctx.shadowBlur = 18
+        ctx.beginPath()
+        ctx.moveTo(impactX - width * 0.12, impactY - height * 0.08)
+        ctx.lineTo(impactX, impactY)
+        ctx.stroke()
+        ctx.beginPath()
+        ctx.arc(impactX, impactY, impactProgress * Math.min(width, height) * 0.16, 0, Math.PI * 2)
+        ctx.strokeStyle = `rgba(255, 190, 131, ${1 - impactProgress})`
+        ctx.stroke()
+        ctx.restore()
+      }
+    }
   }
 
-  const drawModernEarth = (ctx, width, height, time) => {
+  const drawModernEarth = (ctx, width, height, time, progress) => {
     fillAtmosphere(ctx, width, height, '#050b15', '#0b1a29', '#080d16')
     drawStars(ctx, width, height, time, 0.9)
 
@@ -527,8 +691,12 @@
     ctx.arc(centerX, centerY, radius, 0, Math.PI * 2)
     ctx.clip()
     if (earthTexture.complete && earthTexture.naturalWidth > 0) {
-      const drift = reducedMotion ? 0 : Math.sin(time * 0.06) * radius * 0.04
-      ctx.drawImage(earthTexture, centerX - radius + drift, centerY - radius, radius * 2, radius * 2)
+      const drift = reducedMotion ? 0 : Math.sin(time * 0.14) * radius * 0.035
+      ctx.save()
+      ctx.translate(centerX + drift, centerY)
+      ctx.rotate(reducedMotion ? 0 : time * 0.035 + progress * Math.PI * 0.72)
+      ctx.drawImage(earthTexture, -radius, -radius, radius * 2, radius * 2)
+      ctx.restore()
     } else {
       const ocean = ctx.createRadialGradient(centerX - radius * 0.42, centerY - radius * 0.44, radius * 0.05, centerX, centerY, radius * 1.4)
       ocean.addColorStop(0, '#6dc1cc')
@@ -556,7 +724,7 @@
     ctx.lineWidth = Math.max(2, radius * 0.035)
     for (let cloud = 0; cloud < 4; cloud += 1) {
       const cloudY = centerY - radius * 0.56 + cloud * radius * 0.37
-      const cloudDrift = reducedMotion ? 0 : Math.sin(time * 0.21 + cloud * 1.8) * radius * 0.16
+      const cloudDrift = reducedMotion ? 0 : Math.sin(time * 0.38 + cloud * 1.8) * radius * 0.2 + progress * radius * 0.16
       ctx.beginPath()
       ctx.ellipse(centerX + cloudDrift, cloudY, radius * (0.75 - cloud * 0.06), radius * 0.085, -0.23, Math.PI * 1.05, Math.PI * 1.92)
       ctx.stroke()
@@ -570,17 +738,22 @@
     ctx.arc(centerX, centerY, radius + 2, -Math.PI * 0.28, Math.PI * 0.73)
     ctx.stroke()
 
+    const orbitAngle = reducedMotion ? -0.82 : time * 0.19 + progress * Math.PI * 1.4 - 0.82
+    const satelliteX = centerX + Math.cos(orbitAngle) * radius * 1.43
+    const satelliteY = centerY + Math.sin(orbitAngle) * radius * 1.1
     ctx.save()
-    ctx.translate(centerX + radius * 0.9, centerY - radius * 0.72)
-    ctx.rotate(reducedMotion ? 0 : time * 0.03)
-    ctx.strokeStyle = 'rgba(198, 224, 230, 0.45)'
-    ctx.lineWidth = 1
+    ctx.strokeStyle = 'rgba(158, 213, 226, 0.15)'
+    ctx.lineWidth = 0.8
     ctx.beginPath()
-    ctx.moveTo(-11, 0)
-    ctx.lineTo(11, 0)
-    ctx.moveTo(0, -6)
-    ctx.lineTo(0, 6)
+    ctx.ellipse(centerX, centerY, radius * 1.43, radius * 1.1, 0, 0, Math.PI * 2)
     ctx.stroke()
+    ctx.translate(satelliteX, satelliteY)
+    ctx.rotate(orbitAngle + Math.PI * 0.5)
+    ctx.fillStyle = '#d6e6de'
+    ctx.fillRect(-3, -2, 6, 4)
+    ctx.fillStyle = '#66fcf1'
+    ctx.fillRect(-8, -1.2, 4, 2.4)
+    ctx.fillRect(4, -1.2, 4, 2.4)
     ctx.restore()
   }
 
@@ -593,7 +766,7 @@
 
     const sectionPhase = clamp(sceneState.progress * steps.length, 0, steps.length)
     const sectionIndex = Math.min(steps.length - 1, Math.floor(sectionPhase))
-    const sectionFraction = sectionPhase >= steps.length ? 0 : sectionPhase - sectionIndex
+    const sectionFraction = sectionPhase >= steps.length ? 1 : sectionPhase - sectionIndex
     const transition = smoothstep(clamp((sectionFraction - 0.72) / 0.28, 0, 1))
     scenePosition = Math.min(steps.length - 1, sectionIndex + transition)
     stage.dataset.sceneProgress = scenePosition.toFixed(3)
@@ -606,13 +779,14 @@
 
     context.save()
     context.globalAlpha = currentWeight
-    sceneDrawers[currentScene](context, canvasWidth, canvasHeight, reducedMotion ? 0 : time)
+    const currentProgress = reducedMotion ? 0 : clamp(sectionFraction, 0, 1)
+    sceneDrawers[currentScene](context, canvasWidth, canvasHeight, reducedMotion ? 0 : time, currentProgress)
     context.restore()
 
     if (nextScene !== currentScene && sceneFraction > 0) {
       context.save()
       context.globalAlpha = sceneFraction
-      sceneDrawers[nextScene](context, canvasWidth, canvasHeight, reducedMotion ? 0 : time)
+      sceneDrawers[nextScene](context, canvasWidth, canvasHeight, reducedMotion ? 0 : time, 0)
       context.restore()
     }
   }
