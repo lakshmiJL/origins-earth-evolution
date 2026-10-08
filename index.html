@@ -2,14 +2,278 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#101714" />
-    <meta name="description" content="An immersive journey through Earth's deep history and the evolution of life." />
-    <title>ORIGINS | Earth Evolution Experience</title>
+    <meta name="theme-color" content="#0b0c10" />
+    <meta name="description" content="Move through 4.6 billion years of Earth's changing surface, life, and atmosphere." />
+    <title>ORIGINS | Earth in Deep Time</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://upload.wikimedia.org" />
+    <link rel="stylesheet" href="/style.css" />
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script defer src="https://unpkg.com/lenis@1.1.16/dist/lenis.min.js"></script>
+    <script type="module" src="/app.js"></script>
   </head>
   <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
+    <div class="site-shell">
+      <header class="site-header">
+        <a class="brand" href="#top" aria-label="Origins, return to beginning">
+          <span class="brand-mark" aria-hidden="true">O</span>
+          <span class="brand-name">ORIGINS <small>AN ATLAS OF DEEP TIME</small></span>
+        </a>
+        <nav class="header-jumps" aria-label="Chapter shortcuts">
+          <a class="header-jump" href="#era-cenozoic">PRESENT <span aria-hidden="true">↘</span></a>
+          <a class="header-jump" href="#life-cycles">LIFE CYCLES</a>
+          <a class="header-jump" href="#ecosystem-lab">FIELD LAB</a>
+        </nav>
+      </header>
+
+      <main id="top" class="experience-grid">
+        <aside class="visual-stage" data-era="hadean" aria-label="Earth visual through geological time">
+          <canvas class="evolution-canvas" role="img" aria-label="Animated scenes showing Earth's evolution from molten planet to modern Earth"></canvas>
+          <div class="visual-shade" aria-hidden="true"></div>
+          <div class="visual-grain" aria-hidden="true"></div>
+
+          <div class="visual-topline">
+            <span><i></i> PLANETARY ARCHIVE</span>
+            <span class="live-readout"><i></i> SCROLL-MAPPED SCENE</span>
+          </div>
+
+          <div class="visual-title">
+            <p class="micro-label">A LIVING PLANET / 4.6 GA</p>
+            <h1>Earth,<br /><em>in motion.</em></h1>
+            <p class="visual-deck">A world rewritten by heat, water, and life.</p>
+          </div>
+
+          <div class="visual-coordinates">
+            <span class="visual-credit">GENERATIVE SCENE / MOLTEN CRUST</span>
+          </div>
+
+          <div class="era-readout" aria-live="polite" aria-atomic="true">
+            <span class="chapter-count">01 <i></i> 04</span>
+            <span class="era-badge">4.6 Billion Years Ago</span>
+            <span class="readout-era">HADEAN</span>
+          </div>
+
+          <nav class="era-progress" aria-label="Earth timeline chapters">
+            <span class="progress-line" aria-hidden="true"><i class="progress-fill"></i></span>
+            <a href="#era-hadean" class="progress-stop is-active" aria-label="Go to the Hadean era" aria-current="step"><i></i><span>01</span></a>
+            <a href="#era-paleozoic" class="progress-stop" aria-label="Go to the Paleozoic era"><i></i><span>02</span></a>
+            <a href="#era-mesozoic" class="progress-stop" aria-label="Go to the Mesozoic era"><i></i><span>03</span></a>
+            <a href="#era-cenozoic" class="progress-stop" aria-label="Go to the Cenozoic era"><i></i><span>04</span></a>
+            <span class="progress-origin">4.6 BYA</span>
+            <span class="progress-end">TODAY</span>
+          </nav>
+
+          <span class="scroll-hint"><i></i> SCROLL TO TRAVEL</span>
+        </aside>
+
+        <div class="story-track" aria-label="The eras of Earth">
+          <section class="era-step active" id="era-hadean" data-era="hadean" data-index="01" data-period="4.6 Billion Years Ago" data-label="HADEAN" data-credit="GENERATIVE SCENE / MOLTEN CRUST" aria-labelledby="hadean-title">
+            <div class="step-inner">
+              <div class="step-meta"><span>01 / PLANETARY FORMATION</span><span>4.6 — ~4.03 GA</span></div>
+              <p class="step-kicker"><i></i> BEFORE THERE WAS A WORLD</p>
+              <h2 id="hadean-title">The beginning<br />was <em>fire.</em></h2>
+              <p class="step-description">A young Earth, pieced together from orbiting debris, glowed beneath a constant rain of impacts. The surface melted, cooled, and melted again.</p>
+              <ul class="step-facts">
+                <li><span>01</span> A colossal impact gives rise to the Moon</li>
+                <li><span>02</span> A global ocean of magma begins to cool</li>
+                <li><span>03</span> The first minerals preserve hints of water</li>
+              </ul>
+              <div class="step-foot"><span>NO OXYGEN. NO CONTINENTS. JUST POTENTIAL.</span><span>↘</span></div>
+            </div>
+          </section>
+
+          <section class="era-step" id="era-paleozoic" data-era="paleozoic" data-index="02" data-period="538.8 Million Years Ago" data-label="PALEOZOIC" data-credit="GENERATIVE SCENE / PALEOZOIC OCEAN" aria-labelledby="paleozoic-title">
+            <div class="step-inner">
+              <div class="step-meta"><span>02 / LIFE TAKES HOLD</span><span>538.8 — 251.9 MA</span></div>
+              <p class="step-kicker"><i></i> THE OCEAN OPENS A DOOR</p>
+              <h2 id="paleozoic-title">A blue world<br />comes <em>alive.</em></h2>
+              <p class="step-description">An explosion of ocean life reshaped the seas. Then plants, insects, and the first four-limbed animals crossed the shoreline and made land their own.</p>
+              <ul class="step-facts">
+                <li><span>01</span> The Cambrian seas teem with new body forms</li>
+                <li><span>02</span> Forests transform the air and the ground</li>
+                <li><span>03</span> Continents assemble into Pangaea</li>
+              </ul>
+              <div class="step-foot"><span>FROM SHALLOW SEAS TO THE FIRST FORESTS.</span><span>↘</span></div>
+            </div>
+          </section>
+
+          <section class="era-step" id="era-mesozoic" data-era="mesozoic" data-index="03" data-period="251.9 Million Years Ago" data-label="MESOZOIC" data-credit="GENERATIVE SCENE / JURASSIC FOREST" aria-labelledby="mesozoic-title">
+            <div class="step-inner">
+              <div class="step-meta"><span>03 / CONTINENTS IN MOTION</span><span>251.9 — 66 MA</span></div>
+              <p class="step-kicker"><i></i> THE AGE OF REPTILES</p>
+              <h2 id="mesozoic-title">One land.<br />Many <em>giants.</em></h2>
+              <p class="step-description">Dinosaurs rose as the supercontinent fractured. New coastlines formed, climates shifted, and flowering plants brought another kind of change.</p>
+              <ul class="step-facts">
+                <li><span>01</span> Pangaea breaks into drifting continents</li>
+                <li><span>02</span> Dinosaurs thrive across land and sky</li>
+                <li><span>03</span> A mass extinction closes the era</li>
+              </ul>
+              <div class="step-foot"><span>A PLANET DIVIDED, A NEW WORLD EMERGES.</span><span>↘</span></div>
+            </div>
+          </section>
+
+          <section class="era-step" id="era-cenozoic" data-era="cenozoic" data-index="04" data-period="66 Million Years Ago · Today" data-label="CENOZOIC" data-credit="NASA BLUE MARBLE / GENERATIVE CLOUDS" aria-labelledby="cenozoic-title">
+            <div class="step-inner">
+              <div class="step-meta"><span>04 / THE LIVING PLANET</span><span>66 MA — TODAY</span></div>
+              <p class="step-kicker"><i></i> THE WORLD WE INHERIT</p>
+              <h2 id="cenozoic-title">Life makes<br />a <em>comeback.</em></h2>
+              <p class="step-description">Mammals diversified, grasslands spread, and ice ages carved new patterns into the surface. One species began to change the planet at unprecedented speed.</p>
+              <ul class="step-facts">
+                <li><span>01</span> Mammals fill newly open ecosystems</li>
+                <li><span>02</span> Continents settle into familiar positions</li>
+                <li><span>03</span> Human choices shape what comes next</li>
+              </ul>
+              <div class="step-foot"><span>THE STORY IS STILL BEING WRITTEN.</span><span>↗</span></div>
+            </div>
+          </section>
+        </div>
+      </main>
+
+      <div class="timeline-handoff" aria-label="From planetary history to living systems">
+        <span>FROM PLANETARY TIME</span><i></i><span>TO LIVING SYSTEMS</span>
+      </div>
+
+      <section class="closing-section lifecycle-section" id="life-cycles" aria-labelledby="life-cycles-title">
+        <div class="closing-heading">
+          <div>
+            <p class="closing-kicker"><i></i> CHAPTER 05 / LIVING SYSTEMS</p>
+            <h2 id="life-cycles-title">Life moves<br /><em>in cycles.</em></h2>
+          </div>
+          <p class="closing-intro">Growth is not a straight line. Explore how different organisms move through repeating stages, each shaped by the conditions around it.</p>
+        </div>
+
+        <div class="life-cycle-layout">
+          <div class="life-art-panel">
+            <canvas class="life-cycle-canvas" aria-label="Illustrated butterfly life cycle, egg stage"></canvas>
+            <div class="life-art-caption"><span class="life-species-name">Monarch butterfly</span><span class="life-stage-name">Egg</span></div>
+            <span class="life-art-index">CYCLE / 01</span>
+          </div>
+
+          <div class="life-cycle-controls">
+            <div class="species-tabs" role="tablist" aria-label="Choose a life cycle">
+              <button id="tab-butterfly" type="button" class="species-tab is-selected" role="tab" aria-selected="true" aria-controls="life-cycle-panel" tabindex="0" data-species="butterfly">Butterfly</button>
+              <button id="tab-frog" type="button" class="species-tab" role="tab" aria-selected="false" aria-controls="life-cycle-panel" tabindex="-1" data-species="frog">Frog</button>
+              <button id="tab-fern" type="button" class="species-tab" role="tab" aria-selected="false" aria-controls="life-cycle-panel" tabindex="-1" data-species="fern">Fern</button>
+            </div>
+
+            <div id="life-cycle-panel" class="life-copy" role="tabpanel" aria-labelledby="tab-butterfly">
+              <p class="life-copy-kicker">METAMORPHOSIS / <span class="life-stage-count">01 OF 04</span></p>
+              <h3 class="life-stage-title">A beginning, barely seen.</h3>
+              <p class="life-stage-description">An egg is placed on a host plant, where the next generation begins its transformation.</p>
+            </div>
+
+            <ol class="life-stage-list" aria-label="Life cycle stages">
+              <li><button type="button" class="life-stage-button is-current" data-stage-index="0" aria-current="step"><span>01</span><span class="life-stage-button-name">Egg</span></button></li>
+              <li><button type="button" class="life-stage-button" data-stage-index="1"><span>02</span><span class="life-stage-button-name">Caterpillar</span></button></li>
+              <li><button type="button" class="life-stage-button" data-stage-index="2"><span>03</span><span class="life-stage-button-name">Chrysalis</span></button></li>
+              <li><button type="button" class="life-stage-button" data-stage-index="3"><span>04</span><span class="life-stage-button-name">Adult</span></button></li>
+            </ol>
+
+            <div class="life-transport">
+              <button type="button" class="life-transport-button cycle-previous" aria-label="Previous life-cycle stage">← <span>PREVIOUS</span></button>
+              <button type="button" class="life-play-button" aria-pressed="true">PAUSE CYCLE <span aria-hidden="true">Ⅱ</span></button>
+              <button type="button" class="life-transport-button cycle-next" aria-label="Next life-cycle stage"><span>NEXT</span> →</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="closing-section simulation-section" id="ecosystem-lab" aria-labelledby="ecosystem-title">
+        <div class="closing-heading simulation-heading">
+          <div>
+            <p class="closing-kicker"><i></i> CHAPTER 06 / FIELD SIMULATOR</p>
+            <h2 id="ecosystem-title">Change the<br /><em>conditions.</em></h2>
+          </div>
+          <p class="closing-intro">A habitat is a balance of energy, water, and air. Adjust the environment and watch the ecosystem respond.</p>
+        </div>
+
+        <div class="simulation-layout">
+          <div class="ecosystem-display">
+            <canvas class="ecosystem-canvas" aria-label="Animated temperate ecosystem simulation"></canvas>
+            <div class="ecosystem-readout" aria-live="polite">
+              <span class="ecosystem-status-dot"></span>
+              <span><small>HABITAT STATE</small><strong class="habitat-name">Temperate meadow</strong></span>
+              <span class="stability-value"><strong>90</strong><small>STABILITY INDEX</small></span>
+            </div>
+            <div class="ecosystem-scale"><span>LOW RESILIENCE</span><span>HIGH RESILIENCE</span></div>
+            <div class="ecosystem-meter" aria-hidden="true"><span></span></div>
+          </div>
+
+          <div class="simulation-controls">
+            <div class="simulation-controls-head">
+              <div><p class="life-copy-kicker">ENVIRONMENTAL INPUTS</p><h3>Set the climate</h3></div>
+              <button type="button" class="simulation-reset">RESET</button>
+            </div>
+
+            <div class="simulation-presets" role="group" aria-label="Climate presets">
+              <button type="button" data-preset="carboniferous">WARM + WET</button>
+              <button type="button" data-preset="steppe">COOL STEPPE</button>
+              <button type="button" data-preset="arid">HOT + DRY</button>
+            </div>
+
+            <label class="simulation-slider" for="temperature-slider">
+              <span><span>Mean temperature</span><output id="temperature-output">18°C</output></span>
+              <input id="temperature-slider" type="range" min="-5" max="40" value="18" />
+              <span class="slider-range"><small>−5°C</small><small>40°C</small></span>
+            </label>
+            <label class="simulation-slider" for="rainfall-slider">
+              <span><span>Annual rainfall</span><output id="rainfall-output">90 cm</output></span>
+              <input id="rainfall-slider" type="range" min="0" max="200" value="90" />
+              <span class="slider-range"><small>0 cm</small><small>200 cm</small></span>
+            </label>
+            <label class="simulation-slider" for="oxygen-slider">
+              <span><span>Atmospheric oxygen</span><output id="oxygen-output">21%</output></span>
+              <input id="oxygen-slider" type="range" min="5" max="35" value="21" />
+              <span class="slider-range"><small>5%</small><small>35%</small></span>
+            </label>
+            <label class="simulation-slider" for="diversity-slider">
+              <span><span>Species diversity</span><output id="diversity-output">68%</output></span>
+              <input id="diversity-slider" type="range" min="0" max="100" value="68" />
+              <span class="slider-range"><small>0%</small><small>100%</small></span>
+            </label>
+
+            <p class="simulation-note" aria-live="polite">More rainfall supports dense growth; climate extremes lower ecosystem stability.</p>
+            <p class="simulation-model-note">ILLUSTRATIVE INDEX / NOT A FIELD FORECAST</p>
+            <details class="model-disclosure">
+              <summary>How the index is estimated</summary>
+              <p>Each fit is clamped to 0–100: temperature is 100 − 3.1 × distance from 19°C; rainfall is 100 − 0.55 × distance from 100 cm/year; oxygen is 100 − 5 × distance from 21%. Diversity contributes its selected value directly. The final index is the rounded weighted sum shown below, not a prediction of a real ecosystem.</p>
+              <dl class="score-breakdown">
+                <div><dt>Temperature / 19°C reference / × 26%</dt><dd id="score-temperature">97</dd></div>
+                <div><dt>Rainfall / 100 cm reference / × 27%</dt><dd id="score-rainfall">95</dd></div>
+                <div><dt>Oxygen / 21% reference / × 22%</dt><dd id="score-oxygen">100</dd></div>
+                <div><dt>Species diversity / × 25%</dt><dd id="score-diversity">68</dd></div>
+              </dl>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <details class="source-notes" id="sources">
+        <summary>Sources &amp; methods</summary>
+        <div class="source-notes-content">
+          <p>Era boundaries are rounded for this experience; formal chronostratigraphic boundaries are maintained by the International Commission on Stratigraphy.</p>
+          <ul>
+            <li><a href="https://stratigraphy.org/chart" target="_blank" rel="noreferrer">International Chronostratigraphic Chart, v2026-06</a></li>
+            <li><a href="https://science.nasa.gov/earth/facts/" target="_blank" rel="noreferrer">NASA Earth facts and formation overview</a></li>
+            <li><a href="https://www.nps.gov/dino/learn/nature/morrison-formation.htm" target="_blank" rel="noreferrer">National Park Service: Morrison Formation ecosystem</a></li>
+            <li><a href="https://nationalzoo.si.edu/animals/monarch-butterfly" target="_blank" rel="noreferrer">Smithsonian's National Zoo: monarch butterfly</a></li>
+            <li><a href="https://commons.wikimedia.org/wiki/File:Blue_Marble_Western_Hemisphere.jpg" target="_blank" rel="noreferrer">NASA Blue Marble, imagery by Reto Stöckli</a></li>
+          </ul>
+        </div>
+      </details>
+
+      <footer class="site-footer">
+        <span>ORIGINS <i></i> AN ATLAS OF DEEP TIME</span>
+        <nav class="footer-nav" aria-label="Explore more chapters">
+          <a href="#life-cycles">LIFE CYCLES</a>
+          <a href="#ecosystem-lab">FIELD LAB</a>
+          <a href="#sources">SOURCES</a>
+        </nav>
+        <span>THE NEXT CHAPTER IS OURS.</span>
+      </footer>
+    </div>
   </body>
 </html>
