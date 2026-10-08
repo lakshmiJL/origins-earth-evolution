@@ -530,24 +530,66 @@
     const stride = reducedMotion ? 0 : Math.sin(time * 3.2) * size * 0.045
     ctx.save()
     ctx.translate(x, ground)
-    ctx.fillStyle = '#121d16'
+    const bodyGradient = ctx.createLinearGradient(0, -size * 0.72, 0, size * 0.18)
+    bodyGradient.addColorStop(0, '#a6a47c')
+    bodyGradient.addColorStop(0.42, '#78815d')
+    bodyGradient.addColorStop(1, '#34412f')
+
+    ctx.fillStyle = 'rgba(7, 13, 8, 0.5)'
+    ctx.beginPath()
+    ctx.ellipse(-size * 0.05, size * 0.12, size * 0.57, size * 0.09, 0, 0, Math.PI * 2)
+    ctx.fill()
+    ctx.fillStyle = bodyGradient
 
     ctx.beginPath()
-    ctx.moveTo(-size * 0.32, -size * 0.12)
-    ctx.quadraticCurveTo(-size * 0.72, -size * 0.12, -size * 0.98, -size * 0.28)
-    ctx.quadraticCurveTo(-size * 0.77, -size * 0.08, -size * 0.37, size * 0.02)
-    ctx.ellipse(-size * 0.08, -size * 0.15, size * 0.39, size * 0.2, 0, 0, Math.PI * 2)
-    ctx.quadraticCurveTo(size * 0.12, -size * 0.5, size * 0.32, -size * 0.76)
-    ctx.lineTo(size * 0.41, -size * 0.75)
-    ctx.quadraticCurveTo(size * 0.31, -size * 0.4, size * 0.39, -size * 0.2)
-    ctx.quadraticCurveTo(size * 0.42, -size * 0.15, size * 0.52, -size * 0.18)
-    ctx.quadraticCurveTo(size * 0.58, -size * 0.2, size * 0.55, -size * 0.13)
-    ctx.quadraticCurveTo(size * 0.46, -size * 0.05, size * 0.34, -size * 0.11)
-    ctx.lineTo(size * 0.24, size * 0.04)
-    ctx.lineTo(-size * 0.31, size * 0.04)
+    ctx.moveTo(-size * 0.31, -size * 0.24)
+    ctx.quadraticCurveTo(-size * 0.72, -size * 0.16, -size * 0.98, -size * 0.28)
+    ctx.quadraticCurveTo(-size * 0.75, -size * 0.02, -size * 0.31, size * 0.03)
+    ctx.quadraticCurveTo(-size * 0.17, 0, -size * 0.16, -size * 0.1)
     ctx.closePath()
     ctx.fill()
+    ctx.strokeStyle = 'rgba(202, 203, 155, 0.28)'
+    ctx.lineWidth = size * 0.012
+    ctx.stroke()
 
+    ctx.beginPath()
+    ctx.moveTo(size * 0.14, -size * 0.2)
+    ctx.quadraticCurveTo(size * 0.18, -size * 0.48, size * 0.32, -size * 0.76)
+    ctx.lineTo(size * 0.41, -size * 0.75)
+    ctx.quadraticCurveTo(size * 0.31, -size * 0.4, size * 0.39, -size * 0.2)
+    ctx.quadraticCurveTo(size * 0.43, -size * 0.15, size * 0.52, -size * 0.18)
+    ctx.quadraticCurveTo(size * 0.58, -size * 0.2, size * 0.55, -size * 0.13)
+    ctx.quadraticCurveTo(size * 0.46, -size * 0.05, size * 0.34, -size * 0.11)
+    ctx.closePath()
+    ctx.fillStyle = bodyGradient
+    ctx.fill()
+    ctx.strokeStyle = 'rgba(202, 203, 155, 0.28)'
+    ctx.stroke()
+
+    ctx.beginPath()
+    ctx.ellipse(-size * 0.08, -size * 0.15, size * 0.39, size * 0.2, 0, 0, Math.PI * 2)
+    ctx.fillStyle = bodyGradient
+    ctx.fill()
+    ctx.strokeStyle = 'rgba(202, 203, 155, 0.28)'
+    ctx.stroke()
+
+    ctx.save()
+    ctx.beginPath()
+    ctx.ellipse(-size * 0.08, -size * 0.15, size * 0.38, size * 0.19, 0, 0, Math.PI * 2)
+    ctx.clip()
+    for (let row = 0; row < 3; row += 1) {
+      for (let scale = 0; scale < 7; scale += 1) {
+        const scaleX = -size * 0.39 + scale * size * 0.095
+        const scaleY = -size * 0.28 + row * size * 0.085 + (scale % 2) * size * 0.025
+        ctx.fillStyle = row === 0 ? 'rgba(222, 213, 159, 0.18)' : 'rgba(29, 42, 28, 0.16)'
+        ctx.beginPath()
+        ctx.ellipse(scaleX, scaleY, size * 0.025, size * 0.018, -0.2, 0, Math.PI * 2)
+        ctx.fill()
+      }
+    }
+    ctx.restore()
+
+    ctx.fillStyle = bodyGradient
     ctx.beginPath()
     ctx.moveTo(-size * 0.26, -size * 0.06)
     ctx.lineTo(-size * 0.28 + stride, size * 0.2)
@@ -562,6 +604,29 @@
     ctx.lineTo(size * 0.27, -size * 0.08)
     ctx.closePath()
     ctx.fill()
+    ctx.strokeStyle = 'rgba(204, 204, 158, 0.28)'
+    ctx.lineWidth = size * 0.008
+    ctx.stroke()
+
+    ctx.fillStyle = '#202a20'
+    ctx.beginPath()
+    ctx.arc(size * 0.465, -size * 0.18, size * 0.018, 0, Math.PI * 2)
+    ctx.fill()
+    ctx.fillStyle = '#eee0b0'
+    ctx.beginPath()
+    ctx.arc(size * 0.47, -size * 0.187, size * 0.006, 0, Math.PI * 2)
+    ctx.fill()
+    ctx.fillStyle = '#273225'
+    ctx.beginPath()
+    ctx.arc(size * 0.545, -size * 0.16, size * 0.009, 0, Math.PI * 2)
+    ctx.fill()
+
+    ctx.strokeStyle = 'rgba(41, 49, 34, 0.48)'
+    ctx.lineWidth = size * 0.008
+    ctx.beginPath()
+    ctx.moveTo(size * 0.42, -size * 0.1)
+    ctx.quadraticCurveTo(size * 0.49, -size * 0.08, size * 0.55, -size * 0.12)
+    ctx.stroke()
     ctx.restore()
   }
 
@@ -577,6 +642,72 @@
     ctx.quadraticCurveTo(-8, -2, -18, 0)
     ctx.fillStyle = '#101b19'
     ctx.fill()
+    ctx.restore()
+  }
+
+  const drawDinosaurEggClutch = (ctx, centerX, groundY, size, time) => {
+    const bob = reducedMotion ? 0 : Math.sin(time * 0.7) * size * 0.006
+    const eggs = [
+      { x: -0.43, y: 0.01, rotation: -0.18, shade: '#c6ad77' },
+      { x: -0.22, y: -0.13, rotation: 0.1, shade: '#d3bd88' },
+      { x: 0.02, y: -0.04, rotation: -0.1, shade: '#c5aa72' },
+      { x: 0.27, y: -0.14, rotation: 0.16, shade: '#d8c28f' },
+      { x: 0.45, y: 0.03, rotation: -0.12, shade: '#c4a970' },
+      { x: -0.19, y: 0.12, rotation: 0.2, shade: '#cbb47e' },
+      { x: 0.18, y: 0.12, rotation: -0.18, shade: '#d4bd87' },
+    ]
+
+    ctx.save()
+    ctx.translate(centerX, groundY + bob)
+    ctx.fillStyle = 'rgba(4, 10, 7, 0.48)'
+    ctx.beginPath()
+    ctx.ellipse(0, size * 0.08, size * 0.69, size * 0.24, 0, 0, Math.PI * 2)
+    ctx.fill()
+
+    eggs.forEach((egg, index) => {
+      const eggWidth = size * (index % 3 === 0 ? 0.34 : 0.32)
+      const eggHeight = size * 0.2
+      const x = egg.x * size
+      const y = egg.y * size
+      ctx.save()
+      ctx.translate(x, y)
+      ctx.rotate(egg.rotation)
+
+      const eggGradient = ctx.createLinearGradient(-eggWidth * 0.4, -eggHeight, eggWidth * 0.5, eggHeight)
+      eggGradient.addColorStop(0, '#ead9ad')
+      eggGradient.addColorStop(0.42, egg.shade)
+      eggGradient.addColorStop(1, '#756b4f')
+      ctx.beginPath()
+      ctx.moveTo(-eggWidth * 0.5, 0)
+      ctx.bezierCurveTo(-eggWidth * 0.48, -eggHeight * 0.68, -eggWidth * 0.17, -eggHeight, 0, -eggHeight * 0.92)
+      ctx.bezierCurveTo(eggWidth * 0.31, -eggHeight * 0.8, eggWidth * 0.51, -eggHeight * 0.35, eggWidth * 0.5, 0)
+      ctx.bezierCurveTo(eggWidth * 0.49, eggHeight * 0.58, eggWidth * 0.19, eggHeight, 0, eggHeight * 0.9)
+      ctx.bezierCurveTo(-eggWidth * 0.31, eggHeight * 0.78, -eggWidth * 0.51, eggHeight * 0.36, -eggWidth * 0.5, 0)
+      ctx.closePath()
+      ctx.fillStyle = eggGradient
+      ctx.fill()
+      ctx.strokeStyle = 'rgba(245, 228, 188, 0.36)'
+      ctx.lineWidth = Math.max(1, size * 0.004)
+      ctx.stroke()
+
+      ctx.save()
+      ctx.clip()
+      ctx.fillStyle = 'rgba(91, 75, 49, 0.36)'
+      for (let spot = 0; spot < 7; spot += 1) {
+        const spotX = Math.sin((spot + 1) * 8.13 + index) * eggWidth * 0.34
+        const spotY = Math.cos((spot + 2) * 5.37 + index) * eggHeight * 0.58
+        ctx.beginPath()
+        ctx.ellipse(spotX, spotY, size * 0.008, size * 0.005, spot * 0.4, 0, Math.PI * 2)
+        ctx.fill()
+      }
+      ctx.strokeStyle = 'rgba(255, 241, 205, 0.48)'
+      ctx.lineWidth = Math.max(1, size * 0.009)
+      ctx.beginPath()
+      ctx.ellipse(-eggWidth * 0.13, -eggHeight * 0.17, eggWidth * 0.2, eggHeight * 0.36, -0.25, Math.PI * 1.1, Math.PI * 1.8)
+      ctx.stroke()
+      ctx.restore()
+      ctx.restore()
+    })
     ctx.restore()
   }
 
@@ -609,34 +740,19 @@
       drawTree(ctx, treeX, height * (0.78 + (tree % 3) * 0.025), scale, tree % 2 ? '#243c2b' : '#304a30', Math.sin(tree) * 4 + canopySway)
     }
 
-    const sauropodX = width * (0.61 + (reducedMotion ? 0 : Math.sin(time * 0.26) * 0.025))
-    const sauropodGround = height * 0.76
-    const sauropodSize = Math.min(width, height) * 0.48
-    drawSauropod(ctx, sauropodX + progress * width * 0.07, sauropodGround, sauropodSize, time + progress * 7)
-
-    if (!reducedMotion) {
-      const stepBeat = (time * 1.02 + progress * 3) % 1
-      const dustOpacity = Math.max(0, 1 - stepBeat * 5) * 0.2
-      ctx.save()
-      ctx.globalAlpha = dustOpacity
-      ctx.fillStyle = '#c8a87b'
-      for (let dust = 0; dust < 5; dust += 1) {
-        const puff = (stepBeat + dust * 0.16) % 1
-        const footX = sauropodX - sauropodSize * 0.23 + (dust % 2) * sauropodSize * 0.36
-        const spread = puff * sauropodSize * 0.12
-        ctx.beginPath()
-        ctx.ellipse(footX + spread, sauropodGround + sauropodSize * 0.39 - puff * 4, 2 + puff * 5, 1.5 + puff * 3, 0, 0, Math.PI * 2)
-        ctx.fill()
-      }
-      ctx.restore()
-    }
-
-    for (let flyer = 0; flyer < 4; flyer += 1) {
-      const drift = (reducedMotion ? 0 : Math.sin(time * 0.32 + flyer) * width * 0.018) + progress * width * 0.035
-      const altitude = reducedMotion ? 0 : Math.sin(time * 0.7 + flyer * 1.5) * height * 0.018
-      const flap = reducedMotion ? 1 : Math.sin(time * 3.6 + flyer + progress * 5) * 5
-      drawPterosaur(ctx, width * (0.2 + flyer * 0.18) + drift, height * (0.27 + (flyer % 2) * 0.1) + altitude, 0.65 + (flyer % 2) * 0.3, flap)
-    }
+    const dinosaurSize = Math.min(width, height)
+    ctx.save()
+    ctx.globalAlpha = 0.72
+    drawSauropod(ctx, width * 0.17, height * 0.68, dinosaurSize * 0.19, time + progress * 4)
+    ctx.restore()
+    drawSauropod(
+      ctx,
+      width * (0.69 + (reducedMotion ? 0 : Math.sin(time * 0.26) * 0.015)) + progress * width * 0.025,
+      height * 0.64,
+      dinosaurSize * 0.34,
+      time + progress * 6,
+    )
+    drawDinosaurEggClutch(ctx, width * 0.37 + progress * width * 0.025, height * 0.79, dinosaurSize * 0.31, time)
 
     ctx.fillStyle = 'rgba(216, 196, 151, 0.1)'
     for (let mote = 0; mote < 18; mote += 1) {
@@ -901,28 +1017,48 @@
     ctx.lineJoin = 'round'
 
     if (stageIndex === 0) {
-      ctx.rotate(-0.22)
-      ctx.beginPath()
-      ctx.moveTo(-0.7, 0.42)
-      ctx.quadraticCurveTo(0, 0.15, 0.76, -0.48)
-      ctx.strokeStyle = '#8ca974'
-      ctx.lineWidth = 0.035
-      ctx.stroke()
-      for (let leaf = 0; leaf < 5; leaf += 1) {
-        const leafY = 0.31 - leaf * 0.16
-        const direction = leaf % 2 ? -1 : 1
+      const eggs = [
+        { x: -0.15, y: 0.025, rotation: -0.12 },
+        { x: 0, y: -0.015, rotation: 0.04 },
+        { x: 0.15, y: 0.025, rotation: 0.14 },
+      ]
+      eggs.forEach((egg) => {
+        ctx.save()
+        ctx.translate(egg.x, egg.y)
+        ctx.rotate(egg.rotation)
         ctx.beginPath()
-        ctx.ellipse(direction * (0.2 + leaf * 0.08), leafY, 0.2, 0.075, direction * -0.55, 0, Math.PI * 2)
-        ctx.fillStyle = leaf % 2 ? '#315a49' : '#426b50'
+        ctx.moveTo(0, -0.105)
+        ctx.bezierCurveTo(0.04, -0.09, 0.057, -0.035, 0.052, 0.02)
+        ctx.bezierCurveTo(0.047, 0.075, 0.022, 0.105, 0, 0.105)
+        ctx.bezierCurveTo(-0.022, 0.105, -0.047, 0.075, -0.052, 0.02)
+        ctx.bezierCurveTo(-0.057, -0.035, -0.04, -0.09, 0, -0.105)
+        const eggGradient = ctx.createLinearGradient(-0.05, -0.04, 0.05, 0.04)
+        eggGradient.addColorStop(0, '#fff1c9')
+        eggGradient.addColorStop(0.5, '#e9d99e')
+        eggGradient.addColorStop(1, '#b9a873')
+        ctx.fillStyle = eggGradient
         ctx.fill()
-      }
-      ctx.beginPath()
-      ctx.ellipse(0.04, -0.04, 0.075, 0.105, 0.2, 0, Math.PI * 2)
-      ctx.fillStyle = '#e7d5a0'
-      ctx.fill()
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.44)'
-      ctx.lineWidth = 0.014
-      ctx.stroke()
+        ctx.strokeStyle = 'rgba(255, 248, 217, 0.8)'
+        ctx.lineWidth = 0.009
+        ctx.stroke()
+
+        ctx.save()
+        ctx.clip()
+        ctx.strokeStyle = 'rgba(145, 125, 82, 0.48)'
+        ctx.lineWidth = 0.006
+        for (let ridge = -2; ridge <= 2; ridge += 1) {
+          ctx.beginPath()
+          ctx.moveTo(ridge * 0.014, 0.1)
+          ctx.quadraticCurveTo(ridge * 0.012, -0.005, 0, -0.1)
+          ctx.stroke()
+        }
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.52)'
+        ctx.beginPath()
+        ctx.ellipse(-0.016, -0.055, 0.009, 0.026, -0.2, 0, Math.PI * 2)
+        ctx.fill()
+        ctx.restore()
+        ctx.restore()
+      })
     } else if (stageIndex === 1) {
       const bodyColors = ['#a9bd69', '#90ad5d', '#779957', '#63884e', '#4f744b']
       for (let segment = 0; segment < bodyColors.length; segment += 1) {
