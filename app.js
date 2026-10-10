@@ -47,14 +47,14 @@
         { name: 'Adult', title: 'Land, water, and return.', description: 'Adults breathe air and return to freshwater to reproduce, completing the amphibian cycle.' },
       ],
     },
-    fern: {
-      name: 'Bracken fern',
-      cycle: 'ALTERNATION OF GENERATIONS',
+    bee: {
+      name: 'Honeybee',
+      cycle: 'COMPLETE METAMORPHOSIS',
       stages: [
-        { name: 'Spore', title: 'A journey on the air.', description: 'Spores released from the underside of a frond can travel far before finding damp ground.' },
-        { name: 'Gametophyte', title: 'A small, separate generation.', description: 'The spore grows into a tiny gametophyte that produces the cells needed for fertilization.' },
-        { name: 'Young frond', title: 'A new sporophyte unfolds.', description: 'After fertilization, a young fern grows from the gametophyte and begins to unfurl.' },
-        { name: 'Mature fern', title: 'The next spores form.', description: 'A mature fern produces new spores beneath its fronds, continuing the cycle without seeds.' },
+        { name: 'Egg', title: 'One egg in a wax cell.', description: 'A queen lays a single egg in a honeycomb cell, where it begins developing.' },
+        { name: 'Larva', title: 'Growth inside the comb.', description: 'Workers feed the growing larva until it is large enough for its cell to be capped.' },
+        { name: 'Pupa', title: 'An adult takes shape.', description: 'Inside the sealed cell, the pupa develops the wings, legs, and body of an adult bee.' },
+        { name: 'Adult bee', title: 'A new worker emerges.', description: 'The adult chews through its wax cap and joins the colony, eventually helping raise the next generation.' },
       ],
     },
   }
@@ -1252,77 +1252,80 @@
     ctx.restore()
   }
 
-  const drawFernStage = (ctx, stageIndex, time, size) => {
+  const drawBeeStage = (ctx, stageIndex, time, size) => {
     ctx.save()
     ctx.scale(size, size)
-    ctx.strokeStyle = '#7eaf89'
+    ctx.strokeStyle = '#d4a943'
     ctx.lineCap = 'round'
     if (stageIndex === 0) {
-      ctx.lineWidth = 0.035
+      ctx.fillStyle = '#f1e2ad'
       ctx.beginPath()
-      ctx.moveTo(-0.72, 0.58)
-      ctx.quadraticCurveTo(0.05, 0.28, 0.7, -0.48)
-      ctx.stroke()
-      for (let spore = 0; spore < 18; spore += 1) {
-        const x = -0.45 + (spore % 6) * 0.16
-        const y = 0.27 - Math.floor(spore / 6) * 0.17
-        ctx.fillStyle = spore % 2 ? '#d1c38d' : '#a6bc7e'
-        ctx.beginPath()
-        ctx.arc(x, y, 0.025 + (spore % 3) * 0.007, 0, Math.PI * 2)
-        ctx.fill()
-      }
-    } else if (stageIndex === 1) {
-      ctx.beginPath()
-      ctx.moveTo(0, -0.54)
-      ctx.bezierCurveTo(0.61, -0.24, 0.52, 0.27, 0, 0.54)
-      ctx.bezierCurveTo(-0.53, 0.29, -0.59, -0.25, 0, -0.54)
-      ctx.fillStyle = '#5e9878'
+      ctx.ellipse(0, 0, 0.12, 0.2, -0.25, 0, Math.PI * 2)
       ctx.fill()
-      ctx.strokeStyle = 'rgba(210, 232, 184, 0.72)'
+      ctx.strokeStyle = '#ad965e'
       ctx.lineWidth = 0.025
-      ctx.beginPath()
-      ctx.moveTo(0, -0.46)
-      ctx.lineTo(0, 0.42)
       ctx.stroke()
-      for (let archegonium = 0; archegonium < 5; archegonium += 1) {
-        ctx.fillStyle = '#d6c47e'
+    } else if (stageIndex === 1) {
+      for (let segment = 0; segment < 5; segment += 1) {
+        ctx.fillStyle = segment % 2 ? '#e8d6a1' : '#f5e8c5'
         ctx.beginPath()
-        ctx.arc(-0.24 + archegonium * 0.12, -0.05, 0.025, 0, Math.PI * 2)
+        ctx.ellipse(-0.26 + segment * 0.13, 0.02 + Math.sin(segment * 0.7) * 0.07, 0.14, 0.11, 0.15, 0, Math.PI * 2)
         ctx.fill()
-      }
-    } else {
-      const stemSway = reducedMotion ? 0 : Math.sin(time * 1.1) * 0.035
-      ctx.lineWidth = 0.035
-      ctx.beginPath()
-      ctx.moveTo(0, 0.65)
-      ctx.bezierCurveTo(-0.11, 0.1, 0.08 + stemSway, -0.43, 0, -0.7)
-      ctx.stroke()
-      if (stageIndex === 2) {
-        ctx.strokeStyle = '#90bd8c'
-        ctx.lineWidth = 0.08
-        ctx.beginPath()
-        ctx.arc(0.02, -0.66, 0.19, -1.1, Math.PI * 1.52)
+        ctx.strokeStyle = '#b49b66'
+        ctx.lineWidth = 0.018
         ctx.stroke()
+      }
+      ctx.fillStyle = '#40392c'
+      ctx.beginPath()
+      ctx.arc(0.36, -0.07, 0.07, 0, Math.PI * 2)
+      ctx.fill()
+    } else {
+      if (stageIndex === 2) {
+        ctx.fillStyle = 'rgba(236, 204, 129, 0.2)'
+        ctx.beginPath()
+        ctx.roundRect(-0.3, -0.55, 0.6, 1.1, 0.28)
+        ctx.fill()
+        ctx.strokeStyle = '#d4a943'
+        ctx.lineWidth = 0.035
+        ctx.stroke()
+        ctx.fillStyle = '#d6a83e'
+        ctx.beginPath()
+        ctx.ellipse(0, 0.05, 0.15, 0.32, 0, 0, Math.PI * 2)
+        ctx.fill()
       } else {
-        for (let leaflet = 0; leaflet < 8; leaflet += 1) {
-          const y = 0.42 - leaflet * 0.14
-          const reach = 0.18 + leaflet * 0.018
-          for (let side = 0; side < 2; side += 1) {
-            const direction = side ? 1 : -1
-            ctx.beginPath()
-            ctx.moveTo(0, y)
-            ctx.quadraticCurveTo(direction * reach * 0.55, y - 0.02, direction * reach, y - 0.13)
-            ctx.quadraticCurveTo(direction * reach * 0.48, y + 0.015, 0, y)
-            ctx.fillStyle = leaflet % 2 ? '#578d68' : '#73a276'
-            ctx.fill()
-          }
+        const wingFlutter = reducedMotion ? 0 : Math.sin(time * 12) * 0.06
+        ctx.fillStyle = 'rgba(201, 225, 214, 0.72)'
+        ctx.beginPath()
+        ctx.ellipse(-0.12, -0.21, 0.14, 0.28, -0.55 - wingFlutter, 0, Math.PI * 2)
+        ctx.ellipse(0.14, -0.21, 0.14, 0.28, 0.55 + wingFlutter, 0, Math.PI * 2)
+        ctx.fill()
+        ctx.strokeStyle = '#d4a943'
+        ctx.lineWidth = 0.04
+        ctx.beginPath()
+        ctx.moveTo(-0.1, -0.04)
+        ctx.lineTo(-0.2, -0.38)
+        ctx.moveTo(0.1, -0.04)
+        ctx.lineTo(0.2, -0.38)
+        ctx.stroke()
+        ctx.fillStyle = '#d9a63b'
+        ctx.beginPath()
+        ctx.ellipse(0, 0.1, 0.15, 0.28, 0, 0, Math.PI * 2)
+        ctx.fill()
+        ctx.fillStyle = '#322a20'
+        for (const stripeY of [0.02, 0.16, 0.29]) {
+          ctx.fillRect(-0.14, stripeY, 0.28, 0.045)
         }
-        for (let sorus = 0; sorus < 7; sorus += 1) {
-          ctx.fillStyle = 'rgba(206, 188, 122, 0.75)'
-          ctx.beginPath()
-          ctx.arc(-0.11 + (sorus % 2) * 0.23, 0.32 - sorus * 0.1, 0.018, 0, Math.PI * 2)
-          ctx.fill()
-        }
+        ctx.beginPath()
+        ctx.arc(0, -0.22, 0.095, 0, Math.PI * 2)
+        ctx.fill()
+        ctx.strokeStyle = '#322a20'
+        ctx.lineWidth = 0.022
+        ctx.beginPath()
+        ctx.moveTo(-0.035, -0.29)
+        ctx.quadraticCurveTo(-0.12, -0.42, -0.17, -0.39)
+        ctx.moveTo(0.035, -0.29)
+        ctx.quadraticCurveTo(0.12, -0.42, 0.17, -0.39)
+        ctx.stroke()
       }
     }
     ctx.restore()
@@ -1352,7 +1355,7 @@
     ctx.stroke()
     ctx.setLineDash([])
 
-    const speciesDrawer = selectedSpecies === 'butterfly' ? drawButterflyStage : selectedSpecies === 'frog' ? drawFrogStage : drawFernStage
+    const speciesDrawer = selectedSpecies === 'butterfly' ? drawButterflyStage : selectedSpecies === 'frog' ? drawFrogStage : drawBeeStage
     const miniatureSize = Math.min(width, height) * 0.085
     for (let marker = 0; marker < 4; marker += 1) {
       const angle = -Math.PI * 0.5 + marker * Math.PI * 0.5
